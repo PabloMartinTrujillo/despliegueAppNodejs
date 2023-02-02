@@ -1,11 +1,21 @@
 #! /bin/bash
-STACK_NAME=awsbootstrapPabloM
+STACK_NAME=awsbootstrappablom
 REGION=us-east-1
 CLI_PROFILE=default
-
 EC2_INSTANCE_TYPE=t2.micro
 
+AWS_ACCOUNT_ID=`aws sts get-caller-identity --query "Account" --output text`
+BUCKET_NAME=$STACK_NAME-$AWS_ACCOUNT_ID-codepipeline-$REGION
+
 echo -e "\n=========== Desplegando  main.yml ================="
+
+aws cloudformation deploy \
+	--region $REGION \
+	--profile $CLI_PROFILE \
+	--stack-name $STACK_NAME-setup \
+	--template-file setup.yml \
+	--no-fail-on-empty-changeset \
+	--capabilities CAPABILITY_NAMED_IAM \
 
 aws cloudformation deploy \
 	--region $REGION \

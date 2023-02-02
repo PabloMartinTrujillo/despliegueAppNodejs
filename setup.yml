@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Despliegue S3 Bucket Pablo Martín Trujillo
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName:
+        Fn::Join:
+          - '-'
+          - - !Ref "AWS::StackName"
+            - !Ref "AWS::Region"
+            - "codepipeline"
+            - !Ref "AWS::AccountId"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: StackName
+          Value: !Ref AWS::StackName
